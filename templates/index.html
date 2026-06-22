@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Art Generator</title>
+    <style>
+        /* Base Styling & Vibrant Gradient Background */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            max-width: 850px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background: linear-gradient(135deg, #0f0c20 0%, #15102a 100%); 
+            color: #f0f0f5; 
+            min-height: 100vh;
+        }
+
+        /* Header Accent */
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff007f, #00f0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px rgba(255, 0, 127, 0.2);
+        }
+
+        h2 {
+            color: #00f0ff;
+            margin-top: 40px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Form Container Card */
+        form {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(4px);
+        }
+
+        label strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #ff007f;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* High-Contrast Inputs */
+        textarea { 
+            width: 100%; 
+            padding: 15px; 
+            font-size: 16px; 
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            border: 2px solid #3d2f63; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #00f0ff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Vibrant Options Controls */
+        .options { 
+            margin: 25px 0; 
+            display: flex; 
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px; 
+            background: rgba(255, 255, 255, 0.02);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .options strong {
+            color: #00f0ff;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .options label:hover {
+            color: #ff007f;
+        }
+
+        /* Customized Radio Button Accents */
+        .options input[type="radio"] {
+            appearance: none;
+            background-color: transparent;
+            margin: 0;
+            font: inherit;
+            color: #00f0ff;
+            width: 1.15em;
+            height: 1.15em;
+            border: 2px solid #3d2f63;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .options input[type="radio"]::before {
+            content: "";
+            width: 0.55em;
+            height: 0.55em;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #ff007f;
+        }
+
+        .options input[type="radio"]:checked {
+            border-color: #ff007f;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+        }
+
+        .options input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        /* Power Neon Button */
+        button { 
+            background: linear-gradient(90deg, #ff007f, #7928ca); 
+            color: white; 
+            border: none; 
+            padding: 14px 28px; 
+            font-size: 16px; 
+            font-weight: bold;
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+            letter-spacing: 0.5px;
+        }
+        
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 127, 0.5), 0 0 10px rgba(121, 40, 202, 0.4);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Terminal-Style Output Box */
+        pre { 
+            background: #05020a; 
+            color: #39ff14; /* Cyber neon green output */
+            padding: 25px; 
+            overflow-x: auto; 
+            font-family: 'Courier New', Courier, monospace; 
+            border-radius: 12px; 
+            line-height: 1.3; 
+            border: 1px solid #1f1235;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(57, 255, 20, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>ASCII Art Web Interface</h1>
+    <form action="/ascii-art" method="POST">
+        <label for="text"><strong>Text Input:</strong></label>
+        <textarea id="text" name="text" rows="6" placeholder="Type something here..." >{{if .}}{{.Input}}{{end}}</textarea>
+        
+        <div class="options">
+            <strong>Banners:</strong>
+            <label><input type="radio" name="banner" value="standard" {{if .}}{{if eq .Banner "standard"}}checked{{end}}{{else}}checked{{end}}> Standard</label>
+            <label><input type="radio" name="banner" value="shadow" {{if .}}{{if eq .Banner "shadow"}}checked{{end}}{{end}}> Shadow</label>
+            <label><input type="radio" name="banner" value="thinkertoy" {{if .}}{{if eq .Banner "thinkertoy"}}checked{{end}}{{end}}> Thinkertoy</label>
+        </div>
+        
+        <button type="submit">Generate Art</button>
+    </form>
+
+    {{if .Result}}
+    <h2>Result:</h2>
+    <pre>{{.Result}}</pre>
+    {{end}}
+</body>
+</html>

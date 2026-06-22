@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error {{.Code}}</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 100px; background: #fefefe; }
+        h1 { font-size: 48px; color: #dc3545; margin-bottom: 10px; }
+        p { font-size: 20px; color: #6c757d; }
+        a { color: #007bff; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Error {{.Code}}</h1>
+    <p>{{.Message}}</p>
+    <p><a href="/">Return to Home</a></p>
+</body>
+</html>
